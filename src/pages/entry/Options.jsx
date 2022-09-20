@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import Scoops from "./Scoops";
 import Row from "react-bootstrap/Row";
 import Topping from "./Topping";
+import AlertBanner from "../common/AlertBanner";
 
 function Options({ optionTypes }) {
   const [items, setItems] = useState([]);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const getItems = async () => {
@@ -16,7 +18,7 @@ function Options({ optionTypes }) {
         const data = await response.data;
         setItems(data);
       } catch (err) {
-        console.log(err);
+        setError(true);
       }
     };
 
@@ -32,6 +34,8 @@ function Options({ optionTypes }) {
       imagePath={item.imagePath}
     />
   ));
+
+  if (error) return <AlertBanner />;
 
   return <Row>{optionItems}</Row>;
 }
