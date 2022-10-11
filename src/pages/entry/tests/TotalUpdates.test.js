@@ -1,6 +1,7 @@
 import { render, screen } from "../../../test-utils/testing-library-utils";
 import userEvent from "@testing-library/user-event";
 import Options from "../Options";
+import OrderEntry from "../OrderEntry";
 
 test("scoop subtotal when scoops change", async () => {
   render(<Options optionTypes="scoops" />);
@@ -50,4 +51,58 @@ test("toppings subtotal when toppings change", async () => {
   // uncheck a topping
   userEvent.click(hotFudgeToppingCheckbox);
   expect(toppingsSubtotal).toHaveTextContent("1.50");
+});
+
+describe("grand total", () => {
+  test("should update when adding scoops first", async () => {
+    render(<OrderEntry />);
+
+    const grandTotal = screen.getByText("Grand total: $", { exact: false });
+    expect(grandTotal).toHaveTextContent("0.00");
+
+    const chocolateInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
+
+    userEvent.clear(chocolateInput);
+    userEvent.type(chocolateInput, "1");
+
+    expect(grandTotal).toHaveTextContent("2.00");
+  });
+
+  test("should update when adding toppings first", async () => {
+    render(<OrderEntry />);
+
+    const grandTotal = screen.getByText("Grand total: $", { exact: false });
+    const cherriesCheckbox = await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+
+    userEvent.click(cherriesCheckbox);
+
+    expect(grandTotal).toHaveTextContent("1.50");
+  });
+
+  test("should update if any items are removed", async () => {
+    render(<OrderEntry />);
+
+    const grandTotal = screen.getByText("Grand total: $", { exact: false });
+    const chocolateInput = await screen.findByRole("spinbutton", {
+      name: "Chocolate",
+    });
+    const cherriesCheckbox = await screen.findByRole("checkbox", {
+      name: "Cherries",
+    });
+
+    // add options
+    userEvent.clear(chocolateInput);
+    userEvent.type(chocolateInput, "2");
+    userEvent.click(cherriesCheckbox);
+
+    // remove an option
+    userEvent.clear(chocolateInput);
+    userEvent.type(chocolateInput, "1");
+
+    expect(grandTotal).toHaveTextContent("3.50");
+  });
 });
