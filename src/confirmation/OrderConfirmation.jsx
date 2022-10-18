@@ -1,10 +1,19 @@
-import React from "react";
+import Button from "react-bootstrap/Button";
 
-function OrderConfirmation() {
+function OrderConfirmation({ setOrderPhase }) {
+  const handleClick = () => setOrderPhase("inProgress");
+
+  const newOrderButton = (
+    <Button onClick={handleClick}>Create new order</Button>
+  );
+
   return (
-    <>
-      <h2>Thank you for your order!</h2>
-    </>
+    <div>
+      <h1>Thank you!</h1>
+      <p>Your order number is</p>
+      <p>as per our terms and conditions, nothing will happen now</p>
+      {newOrderButton}
+    </div>
   );
 }
 
