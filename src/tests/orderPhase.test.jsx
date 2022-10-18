@@ -54,9 +54,17 @@ test("order phases for happy path", async () => {
   });
   await user.click(confirmOrderButton);
 
+  // expect loading to be on the page
+  const loading = screen.getByText(/loading/i);
+  expect(loading).toBeInTheDocument();
+
   // grab text that
   const orderNumber = await screen.findByText(/order number/i);
   expect(orderNumber).toBeInTheDocument();
+
+  // expect loading not to be on the page
+  const notLoading = screen.queryByText(loading);
+  expect(notLoading).not.toBeInTheDocument();
 
   // find and click "new order" button on confirmation page
   const newOrderButton = screen.getByRole("button", { name: /new order/i });
