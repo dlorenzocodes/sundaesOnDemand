@@ -4,6 +4,7 @@ import Options from "../Options";
 import OrderEntry from "../OrderEntry";
 
 test("scoop subtotal when scoops change", async () => {
+  const user = userEvent.setup();
   render(<Options optionTypes="scoops" />);
 
   //   make sure total starts out 0.00
@@ -14,20 +15,21 @@ test("scoop subtotal when scoops change", async () => {
   const vanillaInput = await screen.findByRole("spinbutton", {
     name: "Vanilla",
   });
-  userEvent.clear(vanillaInput);
-  userEvent.type(vanillaInput, "1");
+  await user.clear(vanillaInput);
+  await user.type(vanillaInput, "1");
   expect(scoopsSubtotal).toHaveTextContent("2.00");
 
   // update chocolate scoops to 2 and check subtotal
   const chocolateInput = await screen.findByRole("spinbutton", {
     name: "Chocolate",
   });
-  userEvent.clear(chocolateInput);
-  userEvent.type(chocolateInput, "2");
+  await user.clear(chocolateInput);
+  await user.type(chocolateInput, "2");
   expect(scoopsSubtotal).toHaveTextContent("6.00");
 });
 
 test("toppings subtotal when toppings change", async () => {
+  const user = userEvent.setup();
   render(<Options optionTypes="toppings" />);
 
   // starts with zero value
@@ -39,21 +41,22 @@ test("toppings subtotal when toppings change", async () => {
   const cherriesToppingCheckbox = await screen.findByRole("checkbox", {
     name: /cherries/i,
   });
-  userEvent.click(cherriesToppingCheckbox);
+  await user.click(cherriesToppingCheckbox);
   expect(toppingsSubtotal).toHaveTextContent("1.50");
 
   const hotFudgeToppingCheckbox = await screen.findByRole("checkbox", {
     name: /hot fudge/i,
   });
-  userEvent.click(hotFudgeToppingCheckbox);
+  await user.click(hotFudgeToppingCheckbox);
   expect(toppingsSubtotal).toHaveTextContent("3.00");
 
   // uncheck a topping
-  userEvent.click(hotFudgeToppingCheckbox);
+  await user.click(hotFudgeToppingCheckbox);
   expect(toppingsSubtotal).toHaveTextContent("1.50");
 });
 
 describe("grand total", () => {
+  const user = userEvent.setup();
   test("should update when adding scoops first", async () => {
     render(<OrderEntry />);
 
@@ -64,13 +67,14 @@ describe("grand total", () => {
       name: "Chocolate",
     });
 
-    userEvent.clear(chocolateInput);
-    userEvent.type(chocolateInput, "1");
+    await user.clear(chocolateInput);
+    await user.type(chocolateInput, "1");
 
     expect(grandTotal).toHaveTextContent("2.00");
   });
 
   test("should update when adding toppings first", async () => {
+    const user = userEvent.setup();
     render(<OrderEntry />);
 
     const grandTotal = screen.getByText("Grand total: $", { exact: false });
@@ -78,12 +82,13 @@ describe("grand total", () => {
       name: "Cherries",
     });
 
-    userEvent.click(cherriesCheckbox);
+    await user.click(cherriesCheckbox);
 
     expect(grandTotal).toHaveTextContent("1.50");
   });
 
   test("should update if any items are removed", async () => {
+    const user = userEvent.setup();
     render(<OrderEntry />);
 
     const grandTotal = screen.getByText("Grand total: $", { exact: false });
@@ -95,13 +100,13 @@ describe("grand total", () => {
     });
 
     // add options
-    userEvent.clear(chocolateInput);
-    userEvent.type(chocolateInput, "2");
-    userEvent.click(cherriesCheckbox);
+    await user.clear(chocolateInput);
+    await user.type(chocolateInput, "2");
+    await user.click(cherriesCheckbox);
 
     // remove an option
-    userEvent.clear(chocolateInput);
-    userEvent.type(chocolateInput, "1");
+    await user.clear(chocolateInput);
+    await user.type(chocolateInput, "1");
 
     expect(grandTotal).toHaveTextContent("3.50");
   });
