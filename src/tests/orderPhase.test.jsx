@@ -62,12 +62,10 @@ test("order phases for happy path", async () => {
   const newOrderButton = screen.getByRole("button", { name: /new order/i });
   await user.click(newOrderButton);
 
-  // check if options are on the screen again
-  const scoopHeading = await screen.findByRole("heading", { name: /scoops/i });
-  const toppingHeading = await screen.findByRole("heading", {
-    name: /toppings/i,
-  });
+  // check that scoops and toppins have been reset
+  const scoopTotal = await screen.findByText("Scoops total: $0.00");
+  const toppingTotal = await screen.findByText("Toppings total: $0.00");
 
-  expect(scoopHeading).toBeInTheDocument();
-  expect(toppingHeading).toBeInTheDocument();
+  expect(scoopTotal).toBeInTheDocument();
+  expect(toppingTotal).toBeInTheDocument();
 });
