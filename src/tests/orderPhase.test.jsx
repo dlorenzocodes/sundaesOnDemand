@@ -77,3 +77,51 @@ test("order phases for happy path", async () => {
   expect(scoopTotal).toBeInTheDocument();
   expect(toppingTotal).toBeInTheDocument();
 });
+
+test("confirm that toppings are not showing on summary page if none selected", async () => {
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  const chocolateInput = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  await user.clear(chocolateInput);
+  await user.type(chocolateInput, "2");
+
+  const reviewOrderButton = screen.getByRole("button", {
+    name: /order sundae!/i,
+  });
+  await user.click(reviewOrderButton);
+
+  const toppingHeading = screen.queryByText("Toppings: $0.00");
+  expect(toppingHeading).not.toBeInTheDocument();
+});
+
+test("confirm toppings are not showing if they are removed", async () => {
+  const user = userEvent.setup();
+
+  render(<App />);
+
+  const chocolateInput = await screen.findByRole("spinbutton", {
+    name: "Chocolate",
+  });
+  await user.clear(chocolateInput);
+  await user.type(chocolateInput, "2");
+
+  const cherryTopping = await screen.findByRole("checkbox", {
+    name: "Cherries",
+  });
+  await user.click(cherryTopping);
+
+  // remove topping
+  await user.click(cherryTopping);
+
+  const reviewOrderButton = screen.getByRole("button", {
+    name: /order sundae!/i,
+  });
+  await user.click(reviewOrderButton);
+
+  const toppingHeading = screen.queryByText("Toppings: $0.00");
+  expect(toppingHeading).not.toBeInTheDocument();
+});
