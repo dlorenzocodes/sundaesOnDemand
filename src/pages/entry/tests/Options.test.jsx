@@ -38,7 +38,7 @@ test("dont update scoops totals if option is invalid", async () => {
     name: "Chocolate",
   });
   await user.clear(chocolateInput);
-  await user.type(chocolateInput, "11");
+  await user.type(chocolateInput, "-1");
 
   const scoopsTotal = screen.getByText("Scoops total: $0.00");
   expect(scoopsTotal).toBeInTheDocument();

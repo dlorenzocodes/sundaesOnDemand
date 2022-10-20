@@ -16,7 +16,7 @@ function OrderConfirmation({ setOrderPhase }) {
         const data = await response.data;
         setOrderNumber(data.orderNumber);
       } catch (error) {
-        setError(error);
+        setError(true);
       }
     };
 
@@ -32,10 +32,6 @@ function OrderConfirmation({ setOrderPhase }) {
     <Button onClick={handleClick}>Create new order</Button>
   );
 
-  if (orderNumber === null) {
-    return <div>Loading...</div>;
-  }
-
   if (error) {
     return (
       <>
@@ -45,14 +41,18 @@ function OrderConfirmation({ setOrderPhase }) {
     );
   }
 
-  return (
-    <div>
-      <h1>Thank you!</h1>
-      <p>Your order number is{orderNumber}</p>
-      <p>as per our terms and conditions, nothing will happen now</p>
-      {newOrderButton}
-    </div>
-  );
+  if (orderNumber) {
+    return (
+      <div>
+        <h1>Thank you!</h1>
+        <p>Your order number is{orderNumber}</p>
+        <p>as per our terms and conditions, nothing will happen now</p>
+        {newOrderButton}
+      </div>
+    );
+  } else {
+    return <div>Loading...</div>;
+  }
 }
 
 export default OrderConfirmation;

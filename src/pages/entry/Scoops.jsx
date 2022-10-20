@@ -20,7 +20,7 @@ function Scoops({ name, imagePath }) {
 
     setIsValid(valueIsValid);
 
-    const newValue = valueIsValid ? currentValue : 0;
+    const newValue = valueIsValid ? parseInt(currentValue) : 0;
     updateItemCount(name, newValue, "scoops");
   };
 
