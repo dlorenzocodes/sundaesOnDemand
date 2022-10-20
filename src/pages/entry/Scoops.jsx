@@ -11,7 +11,7 @@ function Scoops({ name, imagePath }) {
   const handleChange = (e) => {
     const currentValue = e.target.value;
 
-    const currentValueFloat = parseFloat(currentValue);
+    const currentValueFloat = +currentValue;
 
     const valueIsValid =
       0 <= currentValueFloat &&
@@ -20,7 +20,8 @@ function Scoops({ name, imagePath }) {
 
     setIsValid(valueIsValid);
 
-    if (valueIsValid) updateItemCount(name, parseInt(currentValue), "scoops");
+    const newValue = valueIsValid ? currentValue : 0;
+    updateItemCount(name, newValue, "scoops");
   };
 
   return (
