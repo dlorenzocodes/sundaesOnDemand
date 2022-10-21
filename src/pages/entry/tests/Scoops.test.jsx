@@ -2,7 +2,7 @@ import { render, screen } from "../../../test-utils/testing-library-utils";
 import Scoops from "../Scoops";
 import userEvent from "@testing-library/user-event";
 
-test("spinbuttons should have red class if incorrect data is entered", async () => {
+test.only("spinbuttons should have red class if incorrect data is entered", async () => {
   const user = userEvent.setup();
   render(<Scoops name="Chocolate" imagePath="images/chocolate.png" />);
 

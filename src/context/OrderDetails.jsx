@@ -40,7 +40,10 @@ function OrderDetailsProvider(props) {
     const countsArray = Object.values(optionCounts[optionTypes]);
 
     // total the values in the array of counts for the number of items
-    const totalCount = countsArray.reduce((total, value) => total + value, 0);
+    const totalCount = countsArray.reduce(
+      (previousValue, currentValue) => previousValue + currentValue,
+      0
+    );
 
     return totalCount * pricePerItem[optionTypes];
   }
